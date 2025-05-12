@@ -34,7 +34,7 @@ df['month'] = df['date_time'].dt.month
 
 df['hour_label'] = df['hour'].apply(lambda x: 'Midnight' if x == 0 else f'{x}:00')
 
-# 4. Filter data for past dates (up to May 10th)
+# Filter data for past dates (up to May 10th)
 df = df[df['date'] <= pd.to_datetime('2025-05-10').date()]
 
 target = 'Total'  
@@ -69,3 +69,12 @@ for day in range(7):
         plt.grid(True)
         plt.xticks(range(0, 24)) 
         plt.show()
+
+#error code
+df['error'] = df['Total'] - df['predicted_volume']
+
+df_sorted = df.sort_values(by='error', key=abs, ascending=False)
+
+top_5_errors = df_sorted.head(5)
+
+print(top_5_errors[['Time', 'Day of the week', 'hour', 'Total', 'predicted_volume', 'error']])
